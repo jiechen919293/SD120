@@ -46,6 +46,9 @@ Card.prototype.toString = function() {
 
     return `${rank} of ${this.suit}`;
 };
+Card.prototype.valueOf = function() {
+    return this.rank;
+}
 
 // this is the Ex2 part
 function Player(name, hand) {
@@ -66,6 +69,7 @@ Player.prototype.score = function() {
 
 function Game(players, deck) {
     Deck.call(this);
+    Card.call(this);
     this.players = players;
     this.deck = deck;
 }
@@ -78,39 +82,35 @@ Game.prototype.scoresToString = function() {
         console.log(this.players[i].name + ':' + this.players[i].score())
     }
 }
-
+Game.prototype.winnerPicker = function() {
+    let winner = ['', 0];
+    for (let i = 0; i < this.players.length; i++) {
+        if (this.players[i].score() > winner[1]) {
+            winner[0] = this.players[i].name;
+            winner[1] = this.players[i].score();
+        } else {
+            i++;
+        }
+    }
+    console.log(`Winner is ${winner[0]} with score of ${winner[1]}`)
+};
 Game.prototype.play = function() {
-    // figure out how to take turns going through each player, 
-    // having them draw a card, 
-    while (this.deck.length > 0) {
-
+    console.log(this.deck.cards.length);
+    while (this.deck.cards.length > this.players.length) {
         for (let i = 0; i < this.players.length; i++) {
-            this.players[i].card.push(this.deck[i]);
+            this.players[i].hand.push(this.deck.cards[i]);
+            console.log(this.players[0].hand);
         }
         this.deck.draw(this.players.length);
+        this.deck.shuffle();
     };
     // determining when you have ran out of cards 
     // printing out the scores and the winner
-    this.scoresToString()
-    let winner = ['', 0];
-    this.players.forEach(player => {
 
-        if (player.score() > winner[1]) {
-            winner[0] = player.name;
-            winner[1] = player.score();
-        } else {
-            return;
-        }
-
-    });
-    console.log(`winner is${winner[0]}with score of ${winner[1]}`);
+    this.scoresToString();
+    this.winnerPicker();
 }
-
-
-
-
-
-const card1 = new Card('Hearts', 12)
-const card2 = new Card('Spades', 5)
-const player1 = new Player('aaa', [card1, card2])
-player1.score();
+const play1 = new Player('aaa', [])
+const play2 = new Player('bbb', [])
+const game1 = new Game([play1, play2], new Deck());
+game1.play()
