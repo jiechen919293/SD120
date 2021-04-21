@@ -104,9 +104,9 @@ Game.prototype.play = function() {
         this.deck.draw(this.players.length);
         this.deck.shuffle();
     };
+
     // determining when you have ran out of cards 
     // printing out the scores and the winner
-
     this.scoresToString();
     this.winnerPicker();
 }
